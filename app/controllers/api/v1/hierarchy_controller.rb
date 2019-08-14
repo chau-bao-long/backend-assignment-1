@@ -1,9 +1,12 @@
-class Api::V1::HierarchyController < ActionController::Base
+class Api::V1::HierarchyController < ApplicationController
+  before_action :clean_hierarchy, only: :create
+
   def create
-    Relation.build_relationship create_params
+    Relation.refresh_hierarchy! create_params
   end
 
   def index
+    render json: Relation.build_relationship
   end
 
   def staff
@@ -17,6 +20,11 @@ class Api::V1::HierarchyController < ActionController::Base
   end
 
   def create_params
-    params.permit(:personnel)
+    params.require(:personnel)
+  end
+
+  def clean_hierarchy
+    Staff.destroy_all
+    Relation.destroy_all
   end
 end

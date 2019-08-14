@@ -1,6 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe "Hierarchy", type: :request do
+  describe "#GET show personnel hierarchy" do
+  end
+
   describe "#GET show boss and boss of boss for given staff name" do
     context "given basic hierarchy" do
       include_context "basic hierarchy"
@@ -29,7 +32,7 @@ RSpec.describe "Hierarchy", type: :request do
 
   describe "#POST create personnel hierarchy" do
     before do
-      post "/api/v1/hierarchy", personnel
+      post "/api/v1/hierarchy", params: { personnel: personnel }
     end
 
     context "with a simple hierarchy" do
@@ -40,8 +43,16 @@ RSpec.describe "Hierarchy", type: :request do
         "Sophie": "Jonas"
       }}
 
-      it "should create right hierarchy" do
-        expect(response.body).to be_truthy
+      it "response created status" do
+        expect(response.status).to be 204
+      end
+    end
+
+    context "with invalid params" do
+      let(:personnel) { "malicious string" }
+
+      it "response bad request status" do
+        expect(response.status).to be 500
       end
     end
   end

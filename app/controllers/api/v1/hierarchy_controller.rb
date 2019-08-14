@@ -7,16 +7,16 @@ class Api::V1::HierarchyController < ActionController::Base
   end
 
   def staff
-    Staff.all_superiors_of staff_params[:name]
+    render json: Staff.all_superiors_of(staff_params[:name])
   end
 
   private
 
   def staff_params
-    params.require(:name).permit(:name)
+    params.permit(:name)
   end
 
   def create_params
-    params.require(:personnel).permit(:personnel)
+    params.permit(:personnel)
   end
 end

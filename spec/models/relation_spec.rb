@@ -26,7 +26,7 @@ RSpec.describe Relation, type: :model do
       end
 
       it "throw error" do
-        expect { subject }.to raise_error
+        expect { subject }.to raise_error NoMethodError
       end
     end
 
@@ -84,8 +84,47 @@ RSpec.describe Relation, type: :model do
 
     subject { described_class.build_relationship }
 
-    it "raise conflict error" do
-      expect { subject }.to raise_error
+    it "raise error: Sophie cannot be supervisor of Jonas, because Jonas is supervisor of Sophie" do
+      expect { subject }.to raise_error RuntimeError
+    end
+  end
+
+  context "when personnel data is deeply conflict" do
+    let(:personnel) {{
+      "Pete": "Nick",
+      "Barbara": "Nick",
+      "Nick": "Sophie",
+      "Sophie": "Jonas",
+      "Jonas": "Pete"
+    }}
+
+    before { described_class.refresh_hierarchy! personnel }
+
+    subject { described_class.build_relationship }
+
+    it "raise error: Pete cannot be supervisor of Jonas, because
+          Jonas is supervisor of Sophie,
+          who is supervisor of Nick,
+          who is supervisor of Pete," do
+      expect { subject }.to raise_error RuntimeError
+    end
+  end
+
+  context "when personnel data contains multiple roots" do
+    let(:personnel) {{
+      "Pete": "Nick",
+      "Barbara": "Nick",
+      "Nick": "Sophie",
+      "Sophie": "Jonas",
+      "Top": "Long"
+    }}
+
+    before { described_class.refresh_hierarchy! personnel }
+
+    subject { described_class.build_relationship }
+
+    it "raise multiple roots error" do
+      expect { subject }.to raise_error "Contain multi root"
     end
   end
 end

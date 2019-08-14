@@ -14,8 +14,8 @@ class Relation < ApplicationRecord
     def build_relationship
       prepare_data
       build_matrix
-      find_root
-      build_tree
+      root = find_root
+      build_tree root
     end
 
     private
@@ -38,11 +38,14 @@ class Relation < ApplicationRecord
         acc
       end
       raise "Contain multi root" if root.length != 1
-      @root = root.first
+      root.first
     end
 
-    def build_tree
-
+    def build_tree root
+      tree = find_subordinates_of(root).reduce({}) do |tree, sub|
+        tree.merge build_tree(sub)
+      end
+      { name_of(root).to_sym => tree }
     end
 
     def fill_matrix superior:, subordinates: 

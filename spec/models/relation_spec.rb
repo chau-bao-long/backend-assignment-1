@@ -68,6 +68,10 @@ RSpec.describe Relation, type: :model do
       it "validate no error" do
         expect { subject }.to_not raise_error
       end
+
+      it "generate right hierarchy" do
+        is_expected.to eq hierarchy
+      end
     end
   end
 

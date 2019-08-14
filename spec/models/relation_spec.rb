@@ -42,22 +42,50 @@ RSpec.describe Relation, type: :model do
   end
 
   describe ".build_relationship" do
+    context "when personnel data make sense" do
+      let(:personnel) {{
+        "Pete": "Nick",
+        "Barbara": "Nick",
+        "Nick": "Sophie",
+        "Sophie": "Jonas"
+      }}
+
+      let(:hierarchy) {{
+        "Jonas": {
+          "Sophie": {
+            "Nick": {
+              "Pete": {},
+              "Barbara": {}
+            }
+          }
+        }
+      }}
+
+      before { described_class.refresh_hierarchy! personnel }
+
+      subject { described_class.build_relationship }
+
+      it "validate no error" do
+        expect { subject }.to_not raise_error
+      end
+    end
+  end
+
+  context "when personnel data is conflict" do
     let(:personnel) {{
       "Pete": "Nick",
       "Barbara": "Nick",
       "Nick": "Sophie",
-      "Sophie": "Jonas"
+      "Sophie": "Jonas",
+      "Jonas": "Sophie"
     }}
 
-    let(:hierarchy) {{
-      "Jonas": {
-        "Sophie": {
-          "Nick": {
-            "Pete": {},
-            "Barbara": {}
-          }
-        }
-      }
-    }}
+    before { described_class.refresh_hierarchy! personnel }
+
+    subject { described_class.build_relationship }
+
+    it "raise conflict error" do
+      expect { subject }.to raise_error
+    end
   end
 end

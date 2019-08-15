@@ -3,12 +3,17 @@
 docker-compose build
 docker-compose up
 ```
-Seed user to test
+- Create & migrate db
+```bash
+docker-compose exec app rails db:create & rails db:migrate
+```
+
+- Seed user to test
 ```bash
 docker-compose exec app rails db:seed
 ```
 
-Run test
+- Run test
 ```bash
 docker-compose exec app rspec spec
 ```

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
       resources :hierarchy, only: [:index, :show, :create] do
         get :staff, on: :collection  
       end
+
+      resources :sessions, only: [:create]
     end
   end
 end

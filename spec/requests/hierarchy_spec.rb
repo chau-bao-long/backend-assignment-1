@@ -2,6 +2,29 @@ require 'rails_helper'
 
 RSpec.describe "Hierarchy", type: :request do
   describe "#GET show personnel hierarchy" do
+    context "given a simple hierarchy" do
+      include_context "basic hierarchy"
+
+      before do
+        get "/api/v1/hierarchy"
+      end
+
+      it "should response relationship tree successfully" do
+        expect(res_body).to be_truthy
+      end
+    end
+
+    context "given a conflict hierrachy" do
+      include_context "conflict hierarchy"
+
+      before do
+        get "/api/v1/hierarchy"
+      end
+
+      it "should response a clear error" do
+        expect(res_body["error"]).to be_truthy
+      end
+    end
   end
 
   describe "#GET show boss and boss of boss for given staff name" do

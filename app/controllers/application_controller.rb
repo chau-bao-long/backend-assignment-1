@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
     render json: { error: exception.message }, status: :bad_request
   end
 
-  def show_uncaught_error
-    render json: {}, status: :internal_server_error
+  def show_uncaught_error exception
+    render json: { error: exception.message }, status: :internal_server_error
   end
 end

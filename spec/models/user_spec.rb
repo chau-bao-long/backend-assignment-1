@@ -21,7 +21,7 @@ RSpec.describe User, type: :model do
         let(:password) { right_password + "w" }
 
         it "authenticate unsuccessfully and raise error" do
-          expect { subject }.to raise_error
+          expect { subject }.to raise_error "Wrong user name or password"
         end
       end
     end

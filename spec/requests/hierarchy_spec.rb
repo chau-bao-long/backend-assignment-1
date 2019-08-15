@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Hierarchy", type: :request do
+  include_context "mock login"
+
   describe "#GET show personnel hierarchy" do
     context "given a simple hierarchy" do
       include_context "basic hierarchy"
@@ -10,6 +12,7 @@ RSpec.describe "Hierarchy", type: :request do
       end
 
       it "should response relationship tree successfully" do
+        expect_code 200
         expect(res_body).to be_truthy
       end
     end
@@ -22,6 +25,7 @@ RSpec.describe "Hierarchy", type: :request do
       end
 
       it "should response a clear error" do
+        expect_code 500
         expect(res_body["error"]).to be_truthy
       end
     end
@@ -39,6 +43,7 @@ RSpec.describe "Hierarchy", type: :request do
         let(:staff_name) { employee.name }
 
         it "should response right boss and boss's boss" do
+          expect_code 200
           expect(res_body.length).to be > 0
         end
       end
@@ -67,7 +72,7 @@ RSpec.describe "Hierarchy", type: :request do
       }}
 
       it "response created status" do
-        expect(response.status).to be 204
+        expect_code 204
       end
     end
 
@@ -75,7 +80,7 @@ RSpec.describe "Hierarchy", type: :request do
       let(:personnel) { "malicious string" }
 
       it "response bad request status" do
-        expect(response.status).to be 500
+        expect_code 500
       end
     end
   end

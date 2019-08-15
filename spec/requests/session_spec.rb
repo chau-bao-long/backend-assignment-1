@@ -20,5 +20,16 @@ RSpec.describe "Session", type: :request do
         expect(response.status).to eq 204
       end
     end
+
+    context "with invalid user name and password" do
+      let(:params) {{
+        name: user_name,
+        password: ""
+      }}
+
+      it "response login fails" do 
+        expect(response.status).to eq 400
+      end
+    end
   end
 end

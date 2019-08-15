@@ -1,4 +1,5 @@
 class Api::V1::HierarchyController < ApplicationController
+  before_action :authenticate!
   before_action :clean_hierarchy, only: :create
 
   def create

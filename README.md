@@ -5,7 +5,7 @@ docker-compose up
 ```
 - Create & migrate db
 ```bash
-docker-compose exec app rails db:create & rails db:migrate
+docker-compose exec app rails db:create && rails db:migrate
 ```
 
 - Seed user to test
